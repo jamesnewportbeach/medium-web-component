@@ -4,6 +4,7 @@ import { Stage, Layer, Image } from "react-konva";
 
 import Button from "./Button";
 import PolygonAnnotation from "./PolygonAnnotation";
+import useWindowDimensions from "../../hooks/useWindowDimensions";
 
 const videoSource = "./space_landscape.jpg";
 
@@ -13,25 +14,26 @@ export interface IPolygonAnnotationProps {
 }
 
 const wrapperStyle = {
+  height: "100%",
+  width: "100%",
   display: "flex",
   justifyContent: "center",
-  marginTop: 20,
-  backgroundColor: "aliceblue",
 };
 
 const columnStyle = {
+  height: "100%",
+  width: "100%",
   display: "flex",
   justifyContent: "center",
   flexDirection: "column",
   alignItems: "center",
-  marginTop: 20,
-  backgroundColor: "aliceblue",
 };
 
 export const PolygonCanvas: FC<IPolygonAnnotationProps> = ({
   username,
   shouldDisplayMentions,
 }: IPolygonAnnotationProps) => {
+  const { height, width } = useWindowDimensions();
   const [image, setImage] = useState();
   const imageRef = useRef(null);
   const dataRef = useRef(null);
@@ -143,56 +145,44 @@ export const PolygonCanvas: FC<IPolygonAnnotationProps> = ({
   };
 
   return (
-    <div style={wrapperStyle}>
-      <div style={columnStyle}>
-        <Stage
-          width={size.width || 650}
-          height={size.height || 302}
-          onMouseMove={handleMouseMove}
-          onMouseDown={handleMouseDown}
-        >
-          <Layer>
-            <Image
-              ref={imageRef}
-              image={image}
-              x={0}
-              y={0}
-              width={size.width}
-              height={size.height}
-            />
-            <PolygonAnnotation
-              points={points}
-              flattenedPoints={flattenedPoints}
-              handlePointDragMove={handlePointDragMove}
-              handleGroupDragEnd={handleGroupDragEnd}
-              handleMouseOverStartPoint={handleMouseOverStartPoint}
-              handleMouseOutStartPoint={handleMouseOutStartPoint}
-              isFinished={isPolyComplete}
-            />
-          </Layer>
-        </Stage>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Button name="Undo" onClick={undo} />
-          <Button name="Reset" onClick={reset} />
-        </div>
-      </div>
+    <>
+      <Stage
+        width={width}
+        height={height}
+        onMouseMove={handleMouseMove}
+        onMouseDown={handleMouseDown}
+      >
+        <Layer>
+          <PolygonAnnotation
+            points={points}
+            flattenedPoints={flattenedPoints}
+            handlePointDragMove={handlePointDragMove}
+            handleGroupDragEnd={handleGroupDragEnd}
+            handleMouseOverStartPoint={handleMouseOverStartPoint}
+            handleMouseOutStartPoint={handleMouseOutStartPoint}
+            isFinished={isPolyComplete}
+          />
+        </Layer>
+      </Stage>
       <div
-        ref={dataRef}
         style={{
-          width: 375,
-          height: 302,
-          boxShadow: ".5px .5px 5px .4em rgba(0,0,0,.1)",
-          marginTop: 20,
+          position: "absolute",
+          left: 0,
+          top: 0,
         }}
       >
-        <pre style={{ whiteSpace: "pre-wrap" }}>{JSON.stringify(points)}</pre>
+        <Button name="Undo" onClick={undo} />
+        <Button name="Reset" onClick={reset} />
+
+        <div
+          ref={dataRef}
+          style={{
+            boxShadow: ".5px .5px 5px .4em rgba(0,0,0,.1)",
+          }}
+        >
+          <pre style={{ whiteSpace: "pre-wrap" }}>{JSON.stringify(points)}</pre>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
