@@ -1,4 +1,3 @@
-import { PolygonCanvas } from "./components/PolygonAnnotations/Canvas";
 import GoogleMap from "./components/Map";
 
 const PUBLIC_GOOGLEMAPS_API_KEY = "AIzaSyDjcC3UTMdAi8cZXcK7POtXJ7TYf4KvdVE";
@@ -6,18 +5,7 @@ const PUBLIC_GOOGLEMAPS_API_KEY = "AIzaSyDjcC3UTMdAi8cZXcK7POtXJ7TYf4KvdVE";
 function App() {
   return (
     <div style={{ height: "100%", position: "relative" }}>
-      <div
-        style={{
-          height: "100%",
-          width: "100%",
-          zIndex: 1,
-          position: "absolute",
-          left: 0,
-          top: 0,
-        }}
-      >
-        <GoogleMap apiKey={PUBLIC_GOOGLEMAPS_API_KEY} />
-      </div>
+      <GoogleMap apiKey={PUBLIC_GOOGLEMAPS_API_KEY} />
     </div>
   );
 }

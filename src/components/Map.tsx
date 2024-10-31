@@ -10,6 +10,8 @@ import {
   useAdvancedMarkerRef,
 } from "@vis.gl/react-google-maps";
 
+import { PolygonCanvas } from "./PolygonAnnotations/Canvas";
+
 export interface GoogleMapProps {
   apiKey: string;
   lat?: number;
@@ -21,20 +23,13 @@ const GoogleMap: FC<GoogleMapProps> = ({
   apiKey,
   lat = 0,
   lng = 0,
-  zoom = 19,
 }: GoogleMapProps) => {
   const [selectedPlace, setSelectedPlace] =
     useState<google.maps.places.PlaceResult | null>(null);
 
   const [zoomLevel, setZoomLevel] = useState(19);
-
-  useEffect(() => {
-    const metersPerPx =
-      (156543.03392 * Math.cos((lat * Math.PI) / 180)) / Math.pow(2, zoomLevel);
-    const feetPerPx = metersPerPx * 3.28084;
-    console.log(metersPerPx);
-    console.log(feetPerPx);
-  }, [zoomLevel, lat]);
+  const [mapView, setMapView] = useState("roadmap");
+  const [isTrace, setIsTrace] = useState(false);
 
   const getMetersPerPx = () => {
     return (
@@ -56,39 +51,92 @@ const GoogleMap: FC<GoogleMapProps> = ({
     setZoomLevel(zoomLevel - 1);
   };
 
+  const centerChanged = (e: any) => {
+    console.log(e.detail.center);
+  };
+
   return (
     <APIProvider
       apiKey={apiKey}
       solutionChannel="GMP_devsite_samples_v3_rgmautocomplete"
     >
-      <Map
-        mapId={"bf51a910020fa25a"}
-        zoom={zoomLevel}
-        defaultCenter={{ lat, lng }}
-        gestureHandling={"greedy"}
-        disableDefaultUI={false}
-        onZoomChanged={(e) => setZoomLevel(e.detail.zoom)}
+      <div
+        style={{
+          height: "100%",
+          width: "100%",
+          zIndex: 1,
+          position: "absolute",
+          left: 0,
+          top: 0,
+        }}
       >
-        <AdvancedMarker ref={markerRef} position={null} />
-      </Map>
-      <MapControl position={ControlPosition.TOP}>
-        <div className="autocomplete-control">
-          <PlaceAutocomplete onPlaceSelect={setSelectedPlace} />
-          Zoom: {zoomLevel}
-          <br />
-          Meters/Pixel {getMetersPerPx().toFixed(2)}
-          <br />
-          Feet/Pixel {getFeetPerPx().toFixed(2)}
-          <br />
-          <button onClick={zoomIn} disabled={zoomLevel === 22}>
-            + Zoom In
-          </button>
-          <button onClick={zoomOut} disabled={zoomLevel === 2}>
-            - Zoom Out
-          </button>
+        <Map
+          mapId={"test"}
+          zoom={zoomLevel}
+          defaultCenter={{ lat, lng }}
+          gestureHandling={"greedy"}
+          mapTypeId={mapView}
+          disableDefaultUI={true}
+          onCenterChanged={centerChanged}
+        >
+          <AdvancedMarker ref={markerRef} position={null} />
+        </Map>
+
+        <MapControl position={ControlPosition.TOP}>
+          <div className="autocomplete-control">
+            <PlaceAutocomplete onPlaceSelect={setSelectedPlace} />
+            {selectedPlace && (
+              <div>
+                Zoom: {zoomLevel}
+                <br />
+                Meters/Pixel {getMetersPerPx().toFixed(2)}
+                <br />
+                Feet/Pixel {getFeetPerPx().toFixed(2)}
+                <br />
+                Lat/Lng {lat}/{lng}
+                <br />
+                <label>
+                  <input
+                    type="checkbox"
+                    onClick={(e) =>
+                      setMapView(mapView === "hybrid" ? "roadmap" : "hybrid")
+                    }
+                  />{" "}
+                  Satellite
+                </label>
+                <br />
+                <button onClick={zoomIn} disabled={zoomLevel === 22}>
+                  + Zoom In
+                </button>
+                <button onClick={zoomOut} disabled={zoomLevel === 2}>
+                  - Zoom Out
+                </button>
+                <button
+                  onClick={(e) => setIsTrace(!isTrace)}
+                  disabled={zoomLevel === 2}
+                >
+                  Trace
+                </button>
+              </div>
+            )}
+          </div>
+        </MapControl>
+        <MapHandler place={selectedPlace} marker={marker} />
+      </div>
+      {isTrace && (
+        <div
+          style={{
+            height: "100%",
+            width: "100%",
+            zIndex: 2,
+            position: "absolute",
+            left: 0,
+            top: 30,
+          }}
+        >
+          <PolygonCanvas username="Nicolas" />
         </div>
-      </MapControl>
-      <MapHandler place={selectedPlace} marker={marker} />
+      )}
     </APIProvider>
   );
 };
