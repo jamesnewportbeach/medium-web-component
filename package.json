@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "konva": "^8.2.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-konva": "^17.0.2-5",
     "sass": "^1.68.0"
   },
   "devDependencies": {

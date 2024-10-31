@@ -1,17 +1,20 @@
 import ReactDOM from "react-dom/client";
-import { ISubscriptionProps, Subscription } from "./components/Subscription";
+import {
+  IPolygonAnnotationProps,
+  PolygonCanvas,
+} from "./components/PolygonAnnotations/Canvas";
 import { normalizeAttribute } from "./utils";
 
-class SubscriptionWebComponent extends HTMLElement {
+class PolygonCanvasWebComponent extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
   }
 
   connectedCallback() {
-    const props = this.getPropsFromAttributes<ISubscriptionProps>();
+    const props = this.getPropsFromAttributes<IPolygonAnnotationProps>();
     const root = ReactDOM.createRoot(this.shadowRoot as ShadowRoot);
-    root.render(<Subscription {...props} />);
+    root.render(<PolygonCanvas {...props} />);
   }
 
   private getPropsFromAttributes<T>(): T {
@@ -26,4 +29,4 @@ class SubscriptionWebComponent extends HTMLElement {
   }
 }
 
-export default SubscriptionWebComponent;
+export default PolygonCanvasWebComponent;

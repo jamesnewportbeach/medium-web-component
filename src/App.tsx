@@ -1,7 +1,7 @@
-import { Subscription } from "./components/Subscription";
+import { PolygonCanvas } from "./components/PolygonAnnotations/Canvas";
 
 function App() {
-  return <Subscription shouldDisplayMentions username="Nicolas" />;
+  return <PolygonCanvas username="Nicolas" />;
 }
 
 export default App;

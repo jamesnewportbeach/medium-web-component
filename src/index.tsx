@@ -1,4 +1,3 @@
-import SubscriptionWebComponent from "./web-component";
+import PolygonCanvasWebComponent from "./web-component";
 
-// Mandatory to have two part
-customElements.define("my-subscription", SubscriptionWebComponent);
+customElements.define("polygon-canvas", PolygonCanvasWebComponent);
