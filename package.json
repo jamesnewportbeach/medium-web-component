@@ -9,29 +9,35 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
-  "dependencies": {
-    "@vis.gl/react-google-maps": "^1.4.0",
-    "autoprefixer": "^10.4.20",
-    "konva": "^8.2.3",
-    "postcss": "^8.4.47",
+  "peerDependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-google-autocomplete": "^2.7.3",
-    "react-google-places-autocomplete": "^4.1.0",
-    "react-konva": "^17.0.2-5",
-    "sass": "^1.68.0",
-    "tailwindcss": "^3.4.14"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^6.1.6",
+    "@mui/material": "^6.1.6",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
+    "@vis.gl/react-google-maps": "^1.4.0",
     "@vitejs/plugin-react": "^4.0.3",
+    "autoprefixer": "^10.4.20",
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "konva": "^9.3.16",
+    "nanoid": "^5.0.8",
+    "postcss": "^8.4.47",
+    "react-konva": "^18.2.10",
+    "sass": "^1.68.0",
+    "tailwindcss": "^3.4.14",
     "typescript": "^5.0.2",
-    "vite": "^4.4.5"
+    "vite": "^5.4.10"
+  },
+  "dependencies": {
+    "@fontsource/roboto": "^5.1.0"
   }
 }

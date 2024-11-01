@@ -8,12 +8,4 @@ export default defineConfig({
     },
   },
   plugins: [react()],
-  build: {
-    lib: {
-      entry: "./src/index.tsx",
-      name: "polygon-canvas",
-      fileName: (format) => `polygon-canvas.${format}.js`,
-    },
-    target: "es2015",
-  },
 });

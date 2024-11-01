@@ -1,16 +1,19 @@
 // @ts-nocheck
 import { FC, useMemo, useRef, useState, useEffect } from "react";
-import { Stage, Layer, Image } from "react-konva";
+import { Stage, Layer, Image, Line } from "react-konva";
 
-import Button from "./Button";
 import PolygonAnnotation from "./PolygonAnnotation";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
+import { IconButton } from "@mui/material";
+import UndoIcon from "@mui/icons-material/Undo";
+import NotInterestedRoundedIcon from "@mui/icons-material/NotInterestedRounded";
 
 const videoSource = "./space_landscape.jpg";
 
 export interface IPolygonAnnotationProps {
-  username?: string;
-  shouldDisplayMentions?: boolean;
+  onCreate: (e) => void;
+  onChangePoints: (e) => void;
+  onReset: (e) => void;
 }
 
 const wrapperStyle = {
@@ -30,46 +33,25 @@ const columnStyle = {
 };
 
 export const PolygonCanvas: FC<IPolygonAnnotationProps> = ({
-  username,
-  shouldDisplayMentions,
+  onCreate,
+  onChangePoints,
+  onReset,
 }: IPolygonAnnotationProps) => {
   const { height, width } = useWindowDimensions();
-  const [image, setImage] = useState();
-  const imageRef = useRef(null);
-  const dataRef = useRef(null);
   const [points, setPoints] = useState([]);
   const [size, setSize] = useState({});
   const [flattenedPoints, setFlattenedPoints] = useState();
   const [position, setPosition] = useState([0, 0]);
   const [isMouseOverPoint, setMouseOverPoint] = useState(false);
   const [isPolyComplete, setPolyComplete] = useState(false);
-  const videoElement = useMemo(() => {
-    const element = new window.Image();
-    element.width = 650;
-    element.height = 302;
-    element.src = videoSource;
-    return element;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [videoSource]); //it may come from redux so it may be dependency that's why I left it as dependecny...
-
-  useEffect(() => {
-    const onload = function () {
-      setSize({
-        width: videoElement.width,
-        height: videoElement.height,
-      });
-      setImage(videoElement);
-      imageRef.current = videoElement;
-    };
-    videoElement.addEventListener("load", onload);
-    return () => {
-      videoElement.removeEventListener("load", onload);
-    };
-  }, [videoElement]);
 
   const getMousePos = (stage) => {
     return [stage.getPointerPosition().x, stage.getPointerPosition().y];
   };
+
+  useEffect(() => {
+    onChangePoints(points);
+  }, [points]);
 
   //drawing begins when mousedown event fires.
   const handleMouseDown = (e) => {
@@ -78,6 +60,7 @@ export const PolygonCanvas: FC<IPolygonAnnotationProps> = ({
     const mousePos = getMousePos(stage);
     if (isMouseOverPoint && points.length >= 3) {
       setPolyComplete(true);
+      onCreate(points);
     } else {
       setPoints([...points, mousePos]);
     }
@@ -128,6 +111,7 @@ export const PolygonCanvas: FC<IPolygonAnnotationProps> = ({
   const reset = () => {
     setPoints([]);
     setPolyComplete(false);
+    onReset();
   };
 
   const handleGroupDragEnd = (e) => {
@@ -164,25 +148,24 @@ export const PolygonCanvas: FC<IPolygonAnnotationProps> = ({
           />
         </Layer>
       </Stage>
-      <div
-        style={{
-          position: "absolute",
-          left: 0,
-          top: 0,
-        }}
-      >
-        <Button name="Undo" onClick={undo} />
-        <Button name="Reset" onClick={reset} />
 
+      {points.length > 0 && (
         <div
-          ref={dataRef}
           style={{
-            boxShadow: ".5px .5px 5px .4em rgba(0,0,0,.1)",
+            position: "absolute",
+            right: 0,
+            top: 0,
           }}
         >
-          <pre style={{ whiteSpace: "pre-wrap" }}>{JSON.stringify(points)}</pre>
+          <IconButton onClick={undo}>
+            <UndoIcon />
+          </IconButton>
+
+          <IconButton onClick={reset}>
+            <NotInterestedRoundedIcon />
+          </IconButton>
         </div>
-      </div>
+      )}
     </>
   );
 };

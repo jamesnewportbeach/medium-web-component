@@ -60,7 +60,6 @@ const PolygonAnnotation = (props) => {
       name="polygon"
       draggable={isFinished}
       onDragStart={handleGroupDragStart}
-      onDragEnd={handleGroupDragEnd}
       dragBoundFunc={groupDragBound}
       onMouseOver={handleGroupMouseOver}
       onMouseOut={handleGroupMouseOut}
