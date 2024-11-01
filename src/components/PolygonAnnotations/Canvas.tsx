@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { FC, useMemo, useRef, useState, useEffect } from "react";
 import { Stage, Layer, Image, Line } from "react-konva";
+import useImage from "use-image";
 
 import PolygonAnnotation from "./PolygonAnnotation";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
@@ -44,6 +45,10 @@ export const PolygonCanvas: FC<IPolygonAnnotationProps> = ({
   const [position, setPosition] = useState([0, 0]);
   const [isMouseOverPoint, setMouseOverPoint] = useState(false);
   const [isPolyComplete, setPolyComplete] = useState(false);
+
+  const [grassImage] = useImage(
+    "https://www.lawnsmith.co.uk/media/knowledge_base/article/green-grass.webp"
+  );
 
   const getMousePos = (stage) => {
     return [stage.getPointerPosition().x, stage.getPointerPosition().y];
@@ -137,6 +142,14 @@ export const PolygonCanvas: FC<IPolygonAnnotationProps> = ({
         onMouseDown={handleMouseDown}
       >
         <Layer>
+          <Line
+            fillPatternImage={grassImage}
+            x={0}
+            y={0}
+            points={flattenedPoints}
+            tension={0.05}
+            closed
+          />
           <PolygonAnnotation
             points={points}
             flattenedPoints={flattenedPoints}

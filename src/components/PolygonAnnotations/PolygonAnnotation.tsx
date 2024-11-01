@@ -16,6 +16,7 @@ const PolygonAnnotation = (props) => {
     isFinished,
     handlePointDragMove,
     handleGroupDragEnd,
+    handleGroupDrag,
     handleMouseOverStartPoint,
     handleMouseOutStartPoint,
   } = props;
@@ -60,6 +61,7 @@ const PolygonAnnotation = (props) => {
       name="polygon"
       draggable={isFinished}
       onDragStart={handleGroupDragStart}
+      onDragEnd={handleGroupDragEnd}
       dragBoundFunc={groupDragBound}
       onMouseOver={handleGroupMouseOver}
       onMouseOut={handleGroupMouseOut}
@@ -67,9 +69,9 @@ const PolygonAnnotation = (props) => {
       <Line
         points={flattenedPoints}
         stroke="#00F1FF"
-        strokeWidth={3}
+        strokeWidth={2}
         closed={isFinished}
-        fill="rgb(140,30,255,0.5)"
+        fill="rgb(255,255,255,0.2)"
       />
       {points.map((point, index) => {
         const x = point[0] - vertexRadius / 2;
